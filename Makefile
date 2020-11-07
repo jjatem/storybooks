@@ -15,3 +15,8 @@ ENV=staging
 terraform-create-workspace:
 	cd terraform &&  \
 	  terraform workspace new $(ENV)
+
+terraform-init:
+	cd terraform &&  \
+	  terraform workspace select $(ENV) && \
+	  terraform init
