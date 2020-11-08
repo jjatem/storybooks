@@ -38,3 +38,7 @@ variable "mongodbatlas_private_key" {
 variable "cloudflare_api_token" {
   type = string
 }
+
+variable "domain" {
+  type = string
+}
