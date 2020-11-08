@@ -60,7 +60,7 @@ resource "google_compute_instance" "instance" {
     network = data.google_compute_network.default.name
 
     access_config {
-      nat_ip = google_compute_address.ip_address.name
+      nat_ip = google_compute_address.ip_address.address
     }
   }
 
