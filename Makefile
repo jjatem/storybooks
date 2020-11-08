@@ -45,8 +45,8 @@ terraform-action:
 
 SSH_STRING=palas@storybooks-vm-$(ENV)
 
-VERSION?=latest
-LOCAL_TAG=storybooks-app:$(VERSION)
+GITHUB_SHA?=latest
+LOCAL_TAG=storybooks-app:$(GITHUB_SHA)
 REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
 
 CONTAINER_NAME=storybooks-api
