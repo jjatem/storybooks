@@ -37,4 +37,4 @@ terraform-action:
 	  -var-file="./environments/$(ENV)/config.tfvars" \
 	  -var="mongodbatlas_private_key=$(call get-secret,atlas_private_key)" \
 	  -var="atlas_user_password=$(call get-secret,atlas_user_password)" \
-	  -var="cloudflare_api_token=$(call get-secret,cloudflare_api_token)" \
+	  -var="cloudflare_api_token=$(call get-secret,cloudflare_api_token)"
