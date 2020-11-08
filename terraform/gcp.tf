@@ -1,6 +1,6 @@
 provider "google" {
   credentials = file("terraform-sa-key.json")
-  project     = "storybooks-deveops-jj"
+  project     = "storybooks-devops-jj"
   region      = "us-central1"
   zone        = "us-central1-c"
   version     = "~> 3.38"
@@ -29,13 +29,14 @@ resource "google_compute_firewall" "allow_http" {
   }
 
   source_ranges = ["0.0.0.0/0"]
+  source_tags   = ["web"]
 
   target_tags = ["allow-http-${terraform.workspace}"]
 }
 
 ## OS IMAGE
 
-data "google_compute_image" "my_image" {
+data "google_compute_image" "cos_image" {
   family  = "cos-81-lts"
   project = "cos-cloud"
 }
@@ -47,34 +48,23 @@ resource "google_compute_instance" "instance" {
   machine_type = var.gcp_machine_type
   zone         = "us-central1-c"
 
-  tags = ["foo", "bar"]
+  tags = google_compute_firewall.allow_http.target_tags
 
   boot_disk {
     initialize_params {
-      image = google_compute_image.my_image
+      image = data.google_compute_image.cos_image.self_link
     }
-  }
-
-  // Local SSD disk
-  scratch_disk {
-    interface = "SCSI"
   }
 
   network_interface {
-    network = "default"
+    network = data.google_compute_network.default.name
 
     access_config {
-      // Ephemeral IP
+      nat_ip = google_compute_address.ip_address.name
     }
   }
 
-  metadata = {
-    foo = "bar"
-  }
-
-  metadata_startup_script = "echo hi > /test.txt"
-
   service_account {
-    scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+    scopes = ["storage-ro"]
   }
 }
