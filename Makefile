@@ -1,4 +1,5 @@
 PROJECT_ID=storybooks-devops-jj
+ZONE=us-central1-c
 
 run-local:
 	docker-compose up
@@ -38,3 +39,29 @@ terraform-action:
 	  -var="mongodbatlas_private_key=$(call get-secret,atlas_private_key)" \
 	  -var="atlas_user_password=$(call get-secret,atlas_user_password)" \
 	  -var="cloudflare_api_token=$(call get-secret,cloudflare_api_token)"
+
+###
+
+SSH_STRING=palas@storybooks-vm-$(ENV)
+
+VERSION?=latest
+LOCAL_TAG=storybooks-app:$(VERSION)
+REMOTE_TAG=gcr.io/$(PROJECT_ID)/$(LOCAL_TAG)
+
+ssh:
+	gcloud compute ssh $(SSH_STRING) \
+	--project=$(PROJECT_ID) \
+	--zone=$(ZONE)
+
+ssh-cmd:
+	gcloud compute ssh $(SSH_STRING) \
+	--project=$(PROJECT_ID) \
+	--zone=$(ZONE) \
+	--command="$(CMD)"
+
+build:
+	docker build -t $(LOCAL_TAG) .
+
+push:
+	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
+	docker push $(REMOTE_TAG)
