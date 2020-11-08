@@ -20,7 +20,7 @@ data "google_compute_network" "default" {
 ## FIREWALL RULE HTTP
 
 resource "google_compute_firewall" "allow_http" {
-  name    = "allow-http--${terraform.workspace}"
+  name    = "allow-http-${terraform.workspace}"
   network = data.google_compute_network.default.name
 
   allow {
