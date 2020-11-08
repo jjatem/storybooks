@@ -57,7 +57,7 @@ ssh:
 	--zone=$(ZONE)
 
 ssh-cmd:
-	gcloud compute ssh $(SSH_STRING) \
+	@gcloud compute ssh $(SSH_STRING) \
 	--project=$(PROJECT_ID) \
 	--zone=$(ZONE) \
 	--command="$(CMD)"
@@ -74,7 +74,7 @@ deploy:
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
-	$(MAKE) ssh-cmd CMD='\
+	@$(MAKE) ssh-cmd CMD='\
 	  docker run -d --name=$(CONTAINER_NAME) \
 	    --restart=unless-stopped \
 	    -p 80:3000 \
