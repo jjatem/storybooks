@@ -71,9 +71,12 @@ push:
 
 deploy:
 	$(MAKE) ssh-cmd CMD='docker-credential-gcr configure-docker'
+	@echo "pulling new container image..."
 	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
+	@echo "removing old container..."
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
+	@echo "starting - deploying new container..."
 	@$(MAKE) ssh-cmd CMD='\
 	  docker run -d --name=$(CONTAINER_NAME) \
 	    --restart=unless-stopped \
